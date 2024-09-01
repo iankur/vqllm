@@ -43,9 +43,8 @@ tune run recipes/eleuther_eval.py --config recipes/config/eleuther_evaluation.ya
 
 ### Notes
 - EMA embedding sum and cluster size parameters are kept in full precision. However, rest of the model can be in lower precision. So, `model.to(new_dtype)` should be handled carefully.
-- Residual quantizer applies straight through estimator after input has been quantized with all the residual codebooks. This is different from existing works. We do this to preserve gradient propagation for commitment losses with all the residual codebooks.
 - Similarity and EMA update happen in full precision even for low precision inputs. As a result, we accumulate all the residual commitments losses in full precision and cast to original input precision before returning.
-- Torchtune text completion dataset returns input and label sequences, both are identical. Shift happens in the recipe. We use packed dataset, which uses different padding value for input and label sequences. Padding value for label sequence is set to `CROSS_ENTROPY_IGNORE_IDX`. We use this value to create mask to ignore some token embeddings when updating codebook.
+- Torchtune text completion dataset returns input and label sequences, both are identical. Shift happens in the recipe. We modify it to return the actual input and target sequence. We also use packed dataset, which uses different padding value for input and label sequences. Padding value for label sequence is set to `CROSS_ENTROPY_IGNORE_IDX`. We use this value to create vq mask to ignore some token embeddings when updating codebook.
 
 ### Acknowledgements
 - Andrej Karpathy's [vector quantization repo](https://github.com/karpathy/deep-vector-quantization)

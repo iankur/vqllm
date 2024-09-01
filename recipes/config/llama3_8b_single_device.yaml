@@ -49,7 +49,7 @@ model:
   use_fast_quantizer: False
   vq_attn_key_reorder_channel: True
 
-disable_gradient: False # toggle gradient computation
+disable_gradient: True # toggle gradient computation
 freeze_checkpoint_params: True
 trainable_param_keys: []
 wandb_watch_layers: []
