@@ -31,7 +31,7 @@ wandb login
 
 Verify setup by calling
 ```
-from vqllm.models.llama3 import llama3_8b
+from vqllm.models import llama3_8b
 ```
 
 ### Eval

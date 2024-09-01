@@ -1,6 +1,3 @@
-# eval meta/llama3-8b
-tune run recipes/eleuther_eval.py --config recipes/config/eleuther_evaluation.yaml
-
 # train and eval vqllm/llama3-8b
 VQ_KEY="model.vq_attn_key"
 VQ_VALUE="model.vq_attn_value"
@@ -23,7 +20,7 @@ for dhat in 32 64; do
             # train
             tune run recipes/full_finetune_single_device.py \
                 --config recipes/config/llama3_8b_single_device.yaml \
-                $VQ_KEY=True $VQ_VALUE=True $FAST_QUANTIZER \
+                $VQ_KEY=True $VQ_VALUE=True $FAST_QUANTIZER=True \
                 $RESIDUAL_CODEBOOKS=$K $CODES=$C $CODE_DIM=$dhat \
                 checkpointer.output_dir=$CKPT_DIR \
                 $WANDB_PROJECT $WANDB_GROUP $WANDB_NAME="train_K${K}_C${C}_dhat${dhat}"
@@ -31,7 +28,7 @@ for dhat in 32 64; do
             # eval
             tune run recipes/eleuther_eval.py \
                 --config recipes/config/eleuther_evaluation.yaml \
-                $VQ_KEY=True $VQ_VALUE=True $FAST_QUANTIZER \
+                $VQ_KEY=True $VQ_VALUE=True $FAST_QUANTIZER=True \
                 $RESIDUAL_CODEBOOKS=$K $CODES=$C $CODE_DIM=$dhat \
                 checkpointer.checkpoint_dir=$CKPT_DIR \
                 checkpointer.checkpoint_files=['meta_model_0.pt'] \

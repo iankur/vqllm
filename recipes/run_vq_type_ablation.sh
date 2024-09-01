@@ -28,7 +28,7 @@ CKPT_DIR="/home/ubuntu/vqllm/recipes/ckpts/key"
 # train
 tune run recipes/full_finetune_single_device.py \
     --config recipes/config/llama3_8b_single_device.yaml \
-    $VQ_KEY=True $VQ_VALUE=False $FAST_QUANTIZER \
+    $VQ_KEY=True $VQ_VALUE=False $FAST_QUANTIZER=True \
     $RESIDUAL_CODEBOOKS=$K $CODES=$C $CODE_DIM=$dhat \
     $REORDER_CHANNEL=False checkpointer.output_dir=$CKPT_DIR \
     $WANDB_PROJECT $WANDB_GROUP $WANDB_NAME="train_key"
@@ -36,7 +36,7 @@ tune run recipes/full_finetune_single_device.py \
 # eval
 tune run recipes/eleuther_eval.py \
     --config recipes/config/eleuther_evaluation.yaml \
-    $VQ_KEY=True $VQ_VALUE=False $FAST_QUANTIZER \
+    $VQ_KEY=True $VQ_VALUE=False $FAST_QUANTIZER=True \
     $RESIDUAL_CODEBOOKS=$K $CODES=$C $CODE_DIM=$dhat \
     $REORDER_CHANNEL=False checkpointer.output_dir=$CKPT_DIR \
     checkpointer.checkpoint_files=['meta_model_0.pt'] \
@@ -48,7 +48,7 @@ CKPT_DIR="/home/ubuntu/vqllm/recipes/ckpts/key_reorder"
 # train
 tune run recipes/full_finetune_single_device.py \
     --config recipes/config/llama3_8b_single_device.yaml \
-    $VQ_KEY=True $VQ_VALUE=False $FAST_QUANTIZER \
+    $VQ_KEY=True $VQ_VALUE=False $FAST_QUANTIZER=True \
     $RESIDUAL_CODEBOOKS=$K $CODES=$C $CODE_DIM=$dhat \
     $REORDER_CHANNEL=True checkpointer.output_dir=$CKPT_DIR \
     $WANDB_PROJECT $WANDB_GROUP $WANDB_NAME="train_key_reorder"
@@ -56,7 +56,7 @@ tune run recipes/full_finetune_single_device.py \
 # eval
 tune run recipes/eleuther_eval.py \
     --config recipes/config/eleuther_evaluation.yaml \
-    $VQ_KEY=True $VQ_VALUE=False $FAST_QUANTIZER \
+    $VQ_KEY=True $VQ_VALUE=False $FAST_QUANTIZER=True \
     $RESIDUAL_CODEBOOKS=$K $CODES=$C $CODE_DIM=$dhat \
     $REORDER_CHANNEL=True checkpointer.output_dir=$CKPT_DIR \
     checkpointer.checkpoint_files=['meta_model_0.pt'] \
@@ -68,7 +68,7 @@ CKPT_DIR="/home/ubuntu/vqllm/recipes/ckpts/key_reorder"
 # train
 tune run recipes/full_finetune_single_device.py \
     --config recipes/config/llama3_8b_single_device.yaml \
-    $VQ_KEY=False $VQ_VALUE=True $FAST_QUANTIZER \
+    $VQ_KEY=False $VQ_VALUE=True $FAST_QUANTIZER=True \
     $RESIDUAL_CODEBOOKS=$K $CODES=$C $CODE_DIM=$dhat \
     $REORDER_CHANNEL=True checkpointer.output_dir=$CKPT_DIR \
     $WANDB_PROJECT $WANDB_GROUP $WANDB_NAME="train_key_reorder"
@@ -76,19 +76,19 @@ tune run recipes/full_finetune_single_device.py \
 # eval
 tune run recipes/eleuther_eval.py \
     --config recipes/config/eleuther_evaluation.yaml \
-    $VQ_KEY=False $VQ_VALUE=True $FAST_QUANTIZER \
+    $VQ_KEY=False $VQ_VALUE=True $FAST_QUANTIZER=True \
     $RESIDUAL_CODEBOOKS=$K $CODES=$C $CODE_DIM=$dhat \
     $REORDER_CHANNEL=True checkpointer.output_dir=$CKPT_DIR \
     checkpointer.checkpoint_files=['meta_model_0.pt'] \
     $WANDB_PROJECT $WANDB_GROUP $WANDB_NAME="eval_key_reorder"
 
-# train and eval with vq with both key (channel reordering) and value
+# train and eval with vq for both key (with channel reordering) and value
 CKPT_DIR="/home/ubuntu/vqllm/recipes/ckpts/key_reorder_value"
 
 # train
 tune run recipes/full_finetune_single_device.py \
     --config recipes/config/llama3_8b_single_device.yaml \
-    $VQ_KEY=True $VQ_VALUE=True $FAST_QUANTIZER \
+    $VQ_KEY=True $VQ_VALUE=True $FAST_QUANTIZER=True \
     $RESIDUAL_CODEBOOKS=$K $CODES=$C $CODE_DIM=$dhat \
     $REORDER_CHANNEL=True checkpointer.output_dir=$CKPT_DIR \
     $WANDB_PROJECT $WANDB_GROUP $WANDB_NAME="train_key_reorder_value"
@@ -96,7 +96,7 @@ tune run recipes/full_finetune_single_device.py \
 # eval
 tune run recipes/eleuther_eval.py \
     --config recipes/config/eleuther_evaluation.yaml \
-    $VQ_KEY=True $VQ_VALUE=True $FAST_QUANTIZER \
+    $VQ_KEY=True $VQ_VALUE=True $FAST_QUANTIZER=True \
     $RESIDUAL_CODEBOOKS=$K $CODES=$C $CODE_DIM=$dhat \
     $REORDER_CHANNEL=True checkpointer.output_dir=$CKPT_DIR \
     checkpointer.checkpoint_files=['meta_model_0.pt'] \
