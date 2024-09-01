@@ -1,0 +1,56 @@
+# Config for EleutherEvalRecipe in eleuther_eval.py
+#
+# To launch, run the following command from root torchtune directory:
+#    tune run recipes/eleuther_eval.py --config recipes/eleuther_evaluation.yaml tasks=["truthfulqa_mc2","hellaswag"]
+
+# Model arguments
+model:
+  _component_: vqllm.models.llama3_8b
+  vq_attn_key: False
+  vq_attn_value: False
+  vq_layers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+  num_codebooks: 1
+  num_codebook_entries: None
+  codebook_entry_dim: None
+  num_residual_codebooks: None
+  num_residual_steps: 1
+  ema_decay: 0.99
+  use_fast_quantizer: False
+  vq_attn_key_reorder_channel: True
+
+checkpointer:
+  _component_: vqllm.utils.checkpointer.FullModelMetaCheckpointer
+  checkpoint_dir: /home/ubuntu/vqLLM/recipes/ckpts/llama3_8b/original
+  checkpoint_files: ['consolidated.00.pth']
+  recipe_checkpoint: null
+  output_dir: /home/ubuntu/vqLLM/recipes/ckpts
+  model_type: LLAMA3
+
+# Tokenizer
+tokenizer:
+  _component_: torchtune.models.llama3.llama3_tokenizer
+  path: /home/ubuntu/vqLLM/recipes/ckpts/llama3_8b/original/tokenizer.model
+
+# Environment
+device: cuda
+dtype: bf16
+seed: 217
+
+# EleutherAI specific eval args
+tasks: ["arc_challenge", "mmlu", "truthfulqa_mc2", "winogrande", "hellaswag", "gsm8k"]
+num_fewshot: [25, 5, 0, 5, 10, 5]
+limit: null
+max_seq_length: 8192
+batch_size: 1
+# token encoding arg
+add_bos: True
+
+# Quantization specific args
+quantizer: null
+
+# Log results to wandb
+metric_logger:
+  _component_: torchtune.utils.metric_logging.WandBLogger
+  project: vqllm
+  group:
+  name:

@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vqllm"
+version = "0.1.0"
+authors = [
+  { name="Ankur Kumar" },
+]
+description = "Residual vector quantization for KV cache compression in large language model"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = [
+    "torch",
+    "torchtune @ git+https://github.com/pytorch/torchtune.git@6f37d15b2c99d49ca926173455569aa6f8e24d9d",
+    "lm-eval==0.4.2",
+    "triton==2.3.1",
+    "wandb",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit",
+    "black",
+    "pytest",
+]
+
+[tool.setuptools.packages.find]
+include = ["vqllm*"]
+exclude = []
+
+[project.urls]
+Homepage = "https://github.com/iankur/vqllm"
