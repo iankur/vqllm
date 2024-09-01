@@ -18,7 +18,7 @@
 # Tokenizer
 tokenizer:
   _component_: torchtune.models.llama3.llama3_tokenizer
-  path: /home/ubuntu/vqLLM/recipes/ckpts/llama3_8b/original/tokenizer.model
+  path: /home/ubuntu/vqllm/recipes/ckpts/llama3_8b/original/tokenizer.model
 
 # Dataset
 dataset:
@@ -56,7 +56,7 @@ wandb_watch_layers: []
 
 checkpointer:
   _component_: vqllm.utils.checkpointer.FullModelMetaCheckpointer
-  checkpoint_dir: /home/ubuntu/vqLLM/recipes/ckpts/llama3_8b/original
+  checkpoint_dir: /home/ubuntu/vqllm/recipes/ckpts/llama3_8b/original
   checkpoint_files: ['consolidated.00.pth']
   recipe_checkpoint: null
   output_dir:
