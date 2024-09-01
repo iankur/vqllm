@@ -1,0 +1,106 @@
+# Copied from config for single device full finetuning in full_finetune_single_device.py
+#
+# This config assumes that you've run the following command before launching
+# this run:
+#   tune download meta-llama/Meta-Llama-3-8B --output-dir <OUTPUR_DIR> --hf-token <HF_TOKEN>
+#
+# To launch on a single device, run the following command from root:
+#   tune run recipes/full_finetune_single_device.py --config recipes/config/llama3_8B_single_device.yaml
+#
+# You can add specific overrides through the command line. For example
+# to override the checkpointer directory while launching training
+# you can run:
+#   tune run recipes/full_finetune_single_device.py --config recipes/config/llama3_8B_single_device.yaml checkpointer.checkpoint_dir=<YOUR_CHECKPOINT_DIR>
+#
+# This config works only for training on single device.
+
+
+# Tokenizer
+tokenizer:
+  _component_: vqllm.models.mistral_tokenizer
+  path: /home/ubuntu/vqllm/recipes/ckpts/Mistral-7B-v0.1/tokenizer.model
+
+# Dataset
+dataset:
+  _component_: vqllm.utils.data.text_completion_dataset
+  source: DKYoon/SlimPajama-6B
+  split: train
+  column: text
+  # train_on_input: True
+  max_seq_len: 8192
+  packed: True
+  num_random_samples: 10000
+
+seed: 1234
+shuffle: True
+
+# Model arguments
+model:
+  _component_: vqllm.models.mistral_7b
+  vq_attn_key: False
+  vq_attn_value: False
+  vq_layers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+  num_codebooks: 1
+  num_codebook_entries: None
+  codebook_entry_dim: None
+  num_residual_codebooks: None
+  num_residual_steps: 1
+  ema_decay: 0.99
+  use_fast_quantizer: False
+  vq_attn_key_reorder_channel: True
+
+disable_gradient: True # toggle gradient computation
+freeze_checkpoint_params: True
+trainable_param_keys: []
+wandb_watch_layers: []
+
+checkpointer:
+  _component_: vqllm.utils.checkpointer.FullModelHFCheckpointer
+  checkpoint_dir: /home/ubuntu/vqllm/recipes/ckpts/Mistral-7B-v0.1
+  checkpoint_files: [
+    pytorch_model-00001-of-00002.bin,
+    pytorch_model-00002-of-00002.bin
+  ]
+  recipe_checkpoint: null
+  output_dir:
+  model_type: MISTRAL
+resume_from_checkpoint: False
+
+# Fine-tuning arguments
+batch_size: 1
+epochs: 1
+max_steps_per_epoch: 200
+gradient_accumulation_steps: 8
+
+optimizer:
+  _component_: torch.optim.AdamW
+  lr: 1e-5
+
+lr_scheduler:
+  _component_: torchtune.modules.get_cosine_schedule_with_warmup
+  num_warmup_steps: 100
+
+loss:
+  _component_: torch.nn.CrossEntropyLoss
+vq_loss_scale: 0.25
+
+optimizer_in_bwd: False
+compile: False
+
+# Training environment
+device: cuda
+
+# Memory management
+enable_activation_checkpointing: False
+
+# Reduced precision
+dtype: bf16
+
+# Logging
+metric_logger:
+  _component_: torchtune.utils.metric_logging.WandBLogger
+  project: vqllm
+  group:
+  name:
+log_every_n_steps: 1
+log_peak_memory_stats: False

@@ -8,7 +8,6 @@ def quantize(
     mask,
     quantizers,
     training=False,
-    scale=None,
     cosine_distance=False,
 ):
     """

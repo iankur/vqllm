@@ -8,6 +8,22 @@ from torchtune.utils.logging import get_logger
 logger = get_logger("DEBUG")
 
 
+_FROM_HF = convert_weights._FROM_HF
+_FROM_HF.update(
+    {
+        # vq_attn_key
+        "model.layers.{}.attention.quantizer.key.{}.codebook.weight": "layers.{}.attn.quantizer.key.{}.codebook.weight",
+        "model.layers.{}.attention.quantizer.key.{}.codebook.cluster_size": "layers.{}.attn.quantizer.key.{}.codebook.cluster_size",
+        "model.layers.{}.attention.quantizer.key.{}.codebook.embed_avg": "layers.{}.attn.quantizer.key.{}.codebook.embed_avg",
+        "model.layers.{}.attention.quantizer.key.{}.data_initialized": "layers.{}.attn.quantizer.key.{}.data_initialized",
+        # vq_attn_value
+        "model.layers.{}.attention.quantizer.value.{}.codebook.weight": "layers.{}.attn.quantizer.value.{}.codebook.weight",
+        "model.layers.{}.attention.quantizer.value.{}.codebook.cluster_size": "layers.{}.attn.quantizer.value.{}.codebook.cluster_size",  # noqa: B950
+        "model.layers.{}.attention.quantizer.value.{}.codebook.embed_avg": "layers.{}.attn.quantizer.value.{}.codebook.embed_avg",
+        "model.layers.{}.attention.quantizer.value.{}.data_initialized": "layers.{}.attn.quantizer.value.{}.data_initialized",
+    }
+)
+
 _FROM_META = convert_weights._FROM_META
 _FROM_META.update(
     {
@@ -47,6 +63,8 @@ def get_mapped_key(key: str, mapping_dict: Dict[str, str]) -> str:
     return new_key
 
 
+torchtune.models.convert_weights._FROM_HF = _FROM_HF
 torchtune.models.convert_weights._FROM_META = _FROM_META
 torchtune.models.convert_weights.get_mapped_key = get_mapped_key
+FullModelHFCheckpointer = torchtune.utils._checkpointing.FullModelHFCheckpointer
 FullModelMetaCheckpointer = torchtune.utils._checkpointing.FullModelMetaCheckpointer

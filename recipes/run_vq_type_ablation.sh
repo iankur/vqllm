@@ -1,14 +1,3 @@
-# metric logger is set to wandb
-WANDB_PROJECT="metric_logger.project=vqllm"
-WANDB_GROUP="metric_logger.group=vq_type_ablation"
-WANDB_NAME="metric_logger.name"
-
-# eval meta/llama3-8b
-tune run recipes/eleuther_eval.py \
-    --config recipes/config/eleuther_evaluation.yaml \
-    $WANDB_PROJECT $WANDB_NAME="llama3_8b"
-
-
 # train and eval vqllm/llama3-8b
 VQ_KEY="model.vq_attn_key"
 VQ_VALUE="model.vq_attn_value"
@@ -17,6 +6,11 @@ RESIDUAL_CODEBOOKS="model.num_residual_codebooks"
 CODES="model.num_codebook_entries"
 CODE_DIM="model.codebook_entry_dim"
 REORDER_CHANNEL="model.vq_attn_key_reorder_channel"
+
+# metric logger is set to wandb
+WANDB_PROJECT="metric_logger.project=vqllm"
+WANDB_GROUP="metric_logger.group=vq_type_ablation"
+WANDB_NAME="metric_logger.name"
 
 dhat=32
 C=2048
