@@ -1,7 +1,11 @@
+import os
 import re
-from typing import Dict
+from pathlib import Path
+from typing import Any, Dict
 
+import torch
 import torchtune
+from torchtune import utils
 from torchtune.models import convert_weights
 from torchtune.utils.logging import get_logger
 
@@ -63,8 +67,45 @@ def get_mapped_key(key: str, mapping_dict: Dict[str, str]) -> str:
     return new_key
 
 
+def save_hf_checkpoint(
+    self,
+    state_dict: Dict[str, Any],
+    epoch: int,
+    intermediate_checkpoint: bool = False,
+) -> None:
+    state_dict[utils.MODEL_KEY] = convert_weights.tune_to_hf(
+        state_dict[utils.MODEL_KEY],
+        num_heads=self._config["num_attention_heads"],
+        num_kv_heads=self._config["num_key_value_heads"],
+        dim=self._config["hidden_size"],
+    )
+    self._output_dir.mkdir(exist_ok=True)
+
+    # split the state_dict into separate dicts, one for each output checkpoint file
+    split_state_dicts: Dict[str, Dict[str, torch.Tensor]] = {}
+    MAX_CPT_IDX = max(self._weight_map.values())  # noqa: N806
+    for key, weight in state_dict[utils.MODEL_KEY].items():
+        cpt_idx = self._weight_map[key] if key in self._weight_map else MAX_CPT_IDX
+        if cpt_idx not in split_state_dicts:
+            split_state_dicts[cpt_idx] = {}
+        split_state_dicts[cpt_idx].update({key: weight})
+
+    # write the partitioned state dicts to the right checkpoint file
+    for cpt_idx, model_state_dict in split_state_dicts.items():
+        output_path = Path.joinpath(
+            self._output_dir, f"hf_model_{cpt_idx}_{epoch}"
+        ).with_suffix(".pt")
+        torch.save(model_state_dict, output_path)
+        logger.info(
+            "Model checkpoint of size "
+            f"{os.path.getsize(output_path) / 1000**3:.2f} GB "
+            f"saved to {output_path}"
+        )
+
+
 torchtune.models.convert_weights._FROM_HF = _FROM_HF
 torchtune.models.convert_weights._FROM_META = _FROM_META
 torchtune.models.convert_weights.get_mapped_key = get_mapped_key
 FullModelHFCheckpointer = torchtune.utils._checkpointing.FullModelHFCheckpointer
+FullModelHFCheckpointer.save_checkpoint = save_hf_checkpoint
 FullModelMetaCheckpointer = torchtune.utils._checkpointing.FullModelMetaCheckpointer

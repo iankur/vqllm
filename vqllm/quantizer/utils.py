@@ -21,6 +21,7 @@ def quantize(
     """
     # Compute scale for each token
     scale = x.std(dim=-1, keepdim=True)
+    scale = torch.where(scale == 0, 1, scale)
     x = x / scale
 
     if quantizers[0].use_fast_quantizer and quantizers[0].data_initialized.item() == 1:

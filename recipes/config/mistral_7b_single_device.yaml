@@ -18,7 +18,7 @@
 # Tokenizer
 tokenizer:
   _component_: vqllm.models.mistral_tokenizer
-  path: /home/ubuntu/vqllm/recipes/ckpts/Mistral-7B-v0.1/tokenizer.model
+  path: /home/ubuntu/vqllm/recipes/ckpts/mistral_7b/tokenizer.model
 
 # Dataset
 dataset:
@@ -56,7 +56,7 @@ wandb_watch_layers: []
 
 checkpointer:
   _component_: vqllm.utils.checkpointer.FullModelHFCheckpointer
-  checkpoint_dir: /home/ubuntu/vqllm/recipes/ckpts/Mistral-7B-v0.1
+  checkpoint_dir: /home/ubuntu/vqllm/recipes/ckpts/mistral_7b
   checkpoint_files: [
     pytorch_model-00001-of-00002.bin,
     pytorch_model-00002-of-00002.bin

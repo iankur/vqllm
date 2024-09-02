@@ -62,16 +62,17 @@ tune run recipes/eleuther_eval.py \
     $WANDB_PROJECT $WANDB_GROUP $WANDB_NAME="eval_vq_llama3_8b"
 
 # eval mistral-7b
-MISTRAL_TOKENIZER=torchtune.models.mistral_tokenizer
-MISTRAL_TOKENIZER_PATH=/home/ubuntu/vqllm/recipes/ckpts/Mistral-7B-v0.1/tokenizer.model
+MISTRAL_TOKENIZER=vqllm.models.mistral_tokenizer
+MISTRAL_TOKENIZER_PATH=/home/ubuntu/vqllm/recipes/ckpts/mistral_7b/tokenizer.model
 MISTRAL_CHECKPOINTER=vqllm.utils.checkpointer.FullModelHFCheckpointer
+CKPT_DIR="/home/ubuntu/vqllm/recipes/ckpts/mistral_7b"
 MISTRAL_CKPT="[pytorch_model-00001-of-00002.bin,pytorch_model-00002-of-00002.bin]"
 
 tune run recipes/eleuther_eval.py \
     --config recipes/config/eleuther_evaluation.yaml \
     $MODEL=vqllm.models.mistral_7b $MODEL_TYPE=MISTRAL \
-    $CHECKPOINTER=$MISTRAL_CHECKPOINTER $TOKENIZER=$MISTRAL_TOKENIZER \
-    $TOKENIZER_PATH=$MISTRAL_TOKENIZER_PATH \
+    $CHECKPOINTER=$MISTRAL_CHECKPOINTER checkpointer.checkpoint_dir=$CKPT_DIR \
+    $TOKENIZER=$MISTRAL_TOKENIZER $TOKENIZER_PATH=$MISTRAL_TOKENIZER_PATH \
     checkpointer.checkpoint_files=$MISTRAL_CKPT \
     $WANDB_PROJECT $WANDB_GROUP $WANDB_NAME="mistral_7b"
 
