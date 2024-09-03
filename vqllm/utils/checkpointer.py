@@ -83,7 +83,8 @@ def save_hf_checkpoint(
 
     # split the state_dict into separate dicts, one for each output checkpoint file
     split_state_dicts: Dict[str, Dict[str, torch.Tensor]] = {}
-    MAX_CPT_IDX = max(self._weight_map.values())  # noqa: N806
+    MAX_CPT_IDX = max(map(int, self._weight_map.values()))  # noqa: N806
+    MAX_CPT_IDX = f"{MAX_CPT_IDX+1:04}"  # noqa: N806
     for key, weight in state_dict[utils.MODEL_KEY].items():
         cpt_idx = self._weight_map[key] if key in self._weight_map else MAX_CPT_IDX
         if cpt_idx not in split_state_dicts:

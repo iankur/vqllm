@@ -29,12 +29,7 @@ huggingface-cli login
 wandb login
 ```
 
-### Eval
-Download model. Set checkpoint path and tokenizer path in config file. One config file is provided in `vqllm/config/custom_eval_config.yaml`. For example, llama3-8b inference can be run as follows:
-```
-tune download meta-llama/Meta-Llama-3-8B --output-dir recipes/ckpts/llama3_8b
-tune run recipes/eleuther_eval.py --config recipes/config/eleuther_evaluation.yaml
-```
+### Experiment
 All experiments can be launched with the following commands. Note that VQ size and type ablations use llama3 model whereas model ablations uses all the models downloaded below.
 ```
 tune download meta-llama/Meta-Llama-3-8B --output-dir recipes/ckpts/llama3_8b

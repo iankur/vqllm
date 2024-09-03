@@ -96,5 +96,5 @@ tune run recipes/eleuther_eval.py \
     $VQ_KEY=True $VQ_VALUE=True $FAST_QUANTIZER=True \
     $RESIDUAL_CODEBOOKS=$K $CODES=$C $CODE_DIM=$dhat \
     $REORDER_CHANNEL=True checkpointer.checkpoint_dir=$CKPT_DIR \
-    checkpointer.checkpoint_files=['hf_model_0.pt'] \
+    checkpointer.checkpoint_files=[hf_model_0001_0.pt,hf_model_0002_0.pt,hf_model_0003_0.pt] \
     $WANDB_PROJECT $WANDB_GROUP $WANDB_NAME="eval_vq_mistral_7b"
