@@ -17,8 +17,8 @@
 
 # Tokenizer
 tokenizer:
-  _component_: torchtune.models.mistral.mistral_tokenizer
-  path: /home/ubuntu/vqllm/recipes/ckpts/mistral_7b/tokenizer.model
+  _component_: torchtune.models.gemma.gemma_tokenizer
+  path: /home/ubuntu/vqllm/recipes/ckpts/gemma_7b/tokenizer.model
 
 # Dataset
 dataset:
@@ -36,7 +36,7 @@ shuffle: True
 
 # Model arguments
 model:
-  _component_: vqllm.models.mistral_7b
+  _component_: vqllm.models.gemma_7b
   vq_attn_key: False
   vq_attn_value: False
   vq_layers: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
@@ -55,15 +55,15 @@ trainable_param_keys: []
 wandb_watch_layers: []
 
 checkpointer:
-  _component_: vqllm.utils.checkpointer.FullModelHFCheckpointer
-  checkpoint_dir: /home/ubuntu/vqllm/recipes/ckpts/mistral_7b
+  _component_: vqllm.utils.checkpointer.FullModelMetaCheckpointer
+  checkpoint_dir: /home/ubuntu/vqllm/recipes/ckpts/gemma_7b
   checkpoint_files: [
     pytorch_model-00001-of-00002.bin,
     pytorch_model-00002-of-00002.bin
   ]
   recipe_checkpoint: null
   output_dir:
-  model_type: MISTRAL
+  model_type: GEMMA
 resume_from_checkpoint: False
 
 # Fine-tuning arguments

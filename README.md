@@ -30,10 +30,11 @@ wandb login
 ```
 
 ### Experiment
-All experiments can be launched with the following commands. Note that VQ size and type ablations use llama3 model whereas model ablations uses all the models downloaded below.
+All experiments can be launched with the following commands. Note that VQ size and type ablations use llama3 model whereas model ablations uses all the models downloaded below. See more details about the models [here](https://pytorch.org/torchtune/stable/api_ref_models.html).
 ```
 tune download meta-llama/Meta-Llama-3-8B --output-dir recipes/ckpts/llama3_8b
 tune download mistralai/Mistral-7B-v0.1 --output-dir recipes/ckpts/mistral_7b
+tune download google/gemma-7b --output-dir recipes/ckpts/gemma_7b --ignore-patterns "gemma-7b.gguf"
 
 bash recipes/run_vq_size_ablation.sh
 bash recipes/run_vq_type_ablation.sh
