@@ -55,11 +55,13 @@ trainable_param_keys: []
 wandb_watch_layers: []
 
 checkpointer:
-  _component_: vqllm.utils.checkpointer.FullModelMetaCheckpointer
+  _component_: vqllm.utils.checkpointer.FullModelHFCheckpointer
   checkpoint_dir: /home/ubuntu/vqllm/recipes/ckpts/gemma_7b
   checkpoint_files: [
-    pytorch_model-00001-of-00002.bin,
-    pytorch_model-00002-of-00002.bin
+    "model-00001-of-00004.safetensors",
+    "model-00002-of-00004.safetensors",
+    "model-00003-of-00004.safetensors",
+    "model-00004-of-00004.safetensors",
   ]
   recipe_checkpoint: null
   output_dir:

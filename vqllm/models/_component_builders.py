@@ -263,6 +263,17 @@ def gemma(
     norm_eps: float = 1e-6,
     rope_base: int = 10_000,
     norm_embeddings: bool = True,
+    vq_attn_key: Optional[bool] = False,
+    vq_attn_value: Optional[bool] = False,
+    vq_layers: Optional[list] = [],
+    num_codebooks: Optional[int] = None,
+    num_codebook_entries: Optional[int] = None,
+    codebook_entry_dim: Optional[int] = None,
+    num_residual_codebooks: Optional[int] = 1,
+    num_residual_steps: Optional[int] = 1,
+    ema_decay: Optional[float] = 0.0,
+    use_fast_quantizer: Optional[bool] = False,
+    vq_attn_key_reorder_channel: Optional[bool] = False,
 ) -> OriginalGemmaTransformerDecoder:
     """
     Build the decoder associated with the gemma model. This includes:
@@ -323,7 +334,7 @@ def gemma(
         mlp_norm=GemmaRMSNorm(embed_dim, eps=norm_eps),
     )
     tok_embeddings = nn.Embedding(vocab_size, embed_dim)
-    model = GemmaTransformerDecoder(
+    decoder = GemmaTransformerDecoder(
         tok_embeddings=tok_embeddings,
         layer=layer,
         num_layers=num_layers,
@@ -333,4 +344,34 @@ def gemma(
         norm=GemmaRMSNorm(embed_dim, eps=norm_eps),
         norm_embeddings=norm_embeddings,
     )
-    return model
+
+    if vq_attn_key or vq_attn_value:
+        quantizer = VQVAEQuantize(
+            num_codebooks,
+            num_codebook_entries,
+            codebook_entry_dim,
+            decay=ema_decay,
+            num_residual_steps=num_residual_steps,
+            use_fast_quantizer=use_fast_quantizer,
+        )
+
+    if not vq_layers:
+        vq_layers = list(range(num_layers))
+
+    for i, layer in enumerate(decoder.layers):
+        if i in vq_layers:
+            # key
+            if vq_attn_key:
+                quantizer_key = copy.deepcopy(quantizer)
+                quantizer_key.reorder_channel = vq_attn_key_reorder_channel
+                layer.attn.quantizer["key"] = nn.ModuleList(
+                    [copy.deepcopy(quantizer_key) for _ in range(num_residual_codebooks)]
+                )
+
+            # value
+            if vq_attn_value:
+                layer.attn.quantizer["value"] = nn.ModuleList(
+                    [copy.deepcopy(quantizer) for _ in range(num_residual_codebooks)]
+                )
+
+    return decoder

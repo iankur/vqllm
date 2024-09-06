@@ -4,8 +4,7 @@
 # This source code is licensed under the BSD-style license found in the
 # LICENSE file in the root directory of this source tree.
 from torchtune.modules import TransformerDecoder
-from torchtune.modules.gemma.transformer import GemmaTransformerDecoder
-from torchtune.modules.tokenizers import SentencePieceTokenizer
+from torchtune.models.gemma.transformer import GemmaTransformerDecoder
 
 from ._component_builders import gemma, llama3, mistral
 
@@ -146,7 +145,7 @@ def gemma_7b(
     Returns:
         GemmaTransformerDecoder: Instantiation of Gemma 7B model
     """
-    embed_dim = 4096
+    embed_dim = 3072
 
     if num_codebook_entries is None and num_codebooks is not None:
         num_codebook_entries = embed_dim // num_codebooks
@@ -165,7 +164,7 @@ def gemma_7b(
         num_heads=16,
         head_dim=256,
         num_kv_heads=16,
-        embed_dim=3072,
+        embed_dim=embed_dim,
         intermediate_dim=24576,
         max_seq_len=8192,
         attn_dropout=0.0,

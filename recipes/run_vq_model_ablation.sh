@@ -104,7 +104,7 @@ GEMMA_TOKENIZER=torchtune.models.gemma.gemma_tokenizer
 GEMMA_TOKENIZER_PATH=/home/ubuntu/vqllm/recipes/ckpts/gemma_7b/tokenizer.model
 GEMMA_CHECKPOINTER=vqllm.utils.checkpointer.FullModelHFCheckpointer
 CKPT_DIR="/home/ubuntu/vqllm/recipes/ckpts/gemma_7b"
-GEMMA_CKPT="[pytorch_model-00001-of-00002.bin,pytorch_model-00002-of-00002.bin]"
+GEMMA_CKPT="[model-00001-of-00004.safetensors,model-00002-of-00004.safetensors,model-00003-of-00004.safetensors,model-00004-of-00004.safetensors]"
 
 tune run recipes/eleuther_eval.py \
     --config recipes/config/eleuther_evaluation.yaml \
