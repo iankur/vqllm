@@ -383,3 +383,7 @@ class GemmaTransformerDecoder(OriginalGemmaTransformerDecoder):
         if return_vq_loss:
             return output, commitment_loss
         return output
+
+    def update_quantizer_weight(self):
+        for layer in self.layers:
+            layer.update_quantizer_weight()
