@@ -1,5 +1,7 @@
 # vqllm
 Residual vector quantization for KV cache compression in large language model
+- This work has been accepted at [NeurIPS Efficient Natural Language and Speech Processing Workshop (ENLSP-IV 2024)](https://neurips2024-enlsp.github.io/).
+- Preprint version can be accessed on [arxiv](https://arxiv.org/abs/2410.15704).
 
 ## Setup
 ```
